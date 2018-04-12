@@ -1,0 +1,39 @@
+{
+  "name": "perfmor",
+  "description": "Performance utils, use to record or monitor the resources loading performance",
+  "version": "0.0.0",
+  "main": "index.js",
+  "scripts": {
+    "build": "yarn clean && yarn lint && babel src -d dist",
+    "clean": "rimraf dist",
+    "lint": "eslint src/",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-preset-env": "^1.6.1",
+    "babel-preset-stage-2": "^6.24.1",
+    "eslint": "^4.19.1",
+    "eslint-config-standard": "^11.0.0",
+    "eslint-plugin-import": "^2.10.0",
+    "eslint-plugin-node": "^6.0.1",
+    "eslint-plugin-promise": "^3.7.0",
+    "eslint-plugin-standard": "^3.0.1",
+    "rimraf": "^2.6.2"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JMwill/perfmor.git"
+  },
+  "keywords": [
+    "performance",
+    "timing",
+    "resource"
+  ],
+  "author": "JMwill",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/JMwill/perfmor/issues"
+  },
+  "homepage": "https://github.com/JMwill/perfmor#readme"
+}
