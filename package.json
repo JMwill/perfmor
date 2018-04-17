@@ -1,13 +1,16 @@
 {
   "name": "perfmor",
   "description": "Performance utils, use to record or monitor the resources loading performance",
-  "version": "0.0.0-rc.5",
+  "version": "0.0.0-rc.6",
   "main": "src/index.js",
   "scripts": {
     "build": "yarn clean && yarn lint && babel src -d dist",
     "clean": "rimraf dist",
     "lint": "eslint src/",
     "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "gitHooks": {
+    "pre-commit": "yarn lint"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",
