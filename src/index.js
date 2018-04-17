@@ -12,7 +12,7 @@ function getNetTimes(timer = perf.timing) {
   // Redirect time
   net.redirect = t.redirectEnd - t.redirectStart
   // DNS time
-  net.dns = t.domainLookupEnd = t.domainLookupStart
+  net.dns = t.domainLookupEnd - t.domainLookupStart
   // Tcp handshake time
   net.tcp = t.connectEnd - t.connectStart
   // Response time
@@ -36,7 +36,9 @@ function _getFirstPaint() {
   let timing = perf.timing
 
   if (window.PerformancePaintTiming) {
-    let paint = perf.getEntriesByType('paint')[0]
+    let paint = perf.getEntriesByType('paint')
+    if (!paint.length) firstPaint = 0
+    else paint = paint[0]
     firstPaint = paint.startTime + perf.timeOrigin
   } // eslint-disable-line
   // Chrome
