@@ -22,11 +22,11 @@ function getNetTimes(timer = perf.timing) {
   // Time to first byte
   net.ttfb = isEntry ? t.responseStart - t.startTime : t.responseStart - t.navigationStart
   // Resource load time
-  net.loadtime = isEntry ? t.loadEventStart - t.navigationStart : t.duration
+  net.loadtime = isEntry ? t.duration : t.loadEventStart - t.navigationStart
   // Request time
   net.request = t.responseStart - t.requestStart
   // Time spent during the request start until response end
-  net.reqUntilRep = net.request + net.response
+  net.reqUntilRes = net.request + net.response
 
   return net
 }
@@ -79,11 +79,7 @@ function getAppTimes() {
   return app
 }
 
-function monitorResource(cb, opt) {
-  const o = Object.assign({
-    resourceFilter: null,
-  }, opt)
-
+function monitorResource(cb) {
   let resourceMutationConfig = {
     childList: true,
     attributes: true,
@@ -91,11 +87,19 @@ function monitorResource(cb, opt) {
   }
 
   function resourceMutationCallback(mutationList) {
-    let resourceMutationList = utils.filterResourceMutation(mutationList, o.resourceFilter)
-    let resourceNames = resourceMutationList.map(utils.extractResourceName)
-    let resourceNetTimes = resourceNames.map(name => getNetTimes(perf.getEntriesByName(name)))
+    let resourceNodes =
+      mutationList.reduce((nodeList, currentMutation) => {
+        return nodeList.concat(utils.filterResourceNodes(currentMutation))
+      }, [])
 
-    if (typeof cb === 'function') { cb(resourceNetTimes) }
+    resourceNodes.forEach(node => {
+      node.addEventListener('load', function resourceLoad(evt) {
+        let performanceItems = perf.getEntriesByName(utils.getEventNodeResourceName(evt))
+        let netTimes = performanceItems.map(item => getNetTimes(item))
+        if (typeof cb === 'function') { cb(netTimes) }
+        node.removeEventListener('load', resourceLoad)
+      })
+    })
   }
 
   const resourceObserver = new MutationObserver(resourceMutationCallback)
